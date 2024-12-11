@@ -16,7 +16,7 @@ export default function HeadTag() {
         
         {/* Charset Tag: Specifies the character encoding for the webpage */}
         <meta charset="UTF-8" />
-        
+        <link rel="icon" href="/favicon.ico" />
         {/* Keywords Tag: Lists relevant keywords */}
         <meta name="keywords" content="quotes, inspirational quotes, motivational quotes, famous quotes, life quotes, love quotes, friendship quotes, success quotes, wisdom quotes, happiness quotes, positive quotes, daily quotes" />
         

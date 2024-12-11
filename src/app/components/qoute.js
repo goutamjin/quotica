@@ -76,7 +76,7 @@ const QuoteCard = ({ quote, author, userId }) => {
       {/* Quote Content */}
       <div className="p-4 text-center">
         <blockquote className="text-lg font-semibold text-gray-800 italic">
-          "{quote}"
+        &quot;{quote}&quot;
         </blockquote>
         <div className="mt-2 text-sm font-medium text-gray-600">— {author}</div>
       </div>
