@@ -16,7 +16,7 @@ const firebaseConfig = {
 };
 
 
-console.log(firebaseConfig);
+
 
 
 // Initialize Firebase app for the auth and secondary database
