@@ -6,6 +6,7 @@ import BoxCardGrid from "./components/categories";
 import ScrollToTopButton from "./components/scrol_to_top";
 import HeadTag from "./components/head_tag";
 import { loadEnvConfig } from '@next/env'
+import Footer from "./components/footer";
  
 const projectDir = process.cwd()
 loadEnvConfig(projectDir)
@@ -20,13 +21,15 @@ export default function RootLayout({ children }) {
       <HeadTag/>
       <body className="bg-gray-100" >
         <NavbarWithSubmenu />
+        
         <BoxCardGrid/>
+        
         <ScrollToTopButton/>
         {/* <CookieConsent /> */}
        {/* Render the main content */}
         <main>{children}</main>
 
-        <footer>© 2024 Quotica</footer>
+        <Footer />
       </body>
     </html>
   );
