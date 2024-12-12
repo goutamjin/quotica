@@ -5,6 +5,11 @@ import '../app/globals.css';
 import BoxCardGrid from "./components/categories";
 import ScrollToTopButton from "./components/scrol_to_top";
 import HeadTag from "./components/head_tag";
+import { loadEnvConfig } from '@next/env'
+ 
+const projectDir = process.cwd()
+loadEnvConfig(projectDir)
+
 
 
 export default function RootLayout({ children }) {

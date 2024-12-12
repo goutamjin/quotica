@@ -1,21 +1,25 @@
-'use client'
+'use client';
 import React, { useState, useEffect } from "react";
 import QuoteCard from "./components/qoute";
 import mainHandler from "./logics/MainHandler";
 import { useAuth } from "./logics/firebase/auth_manage";
 import { generateShortHash } from "./logics/quote_id_gene";
-import { getLikes } from "./components/sharelike";
 import { fetchLikedData } from "./logics/firebase/like/fetchLikes_local";
-
 
 export default function Page() {
   const [quoteCards, setQuoteCards] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [loadedQuoteHashes, setLoadedQuoteHashes] = useState(new Set()); // To track already loaded quotes
-  const userID = localStorage.getItem("firebase_uid");
+  const [userID, setUserID] = useState(null);
 
-  useAuth((islogin,uid)=>{
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setUserID(localStorage.getItem("firebase_uid"));
+    }
+  }, []);
+
+  useAuth((islogin, uid) => {
     if (islogin) {
       fetchLikedData(uid);
     }
@@ -28,7 +32,7 @@ export default function Page() {
 
     try {
       const preferences = {}; // Example preferences
-      const fetch_count= window.innerWidth <= 768 ? 5: window.innerWidth <= 1024 ? 8 : 12;
+      const fetch_count = window.innerWidth <= 768 ? 5 : window.innerWidth <= 1024 ? 8 : 12;
       const quotes = await mainHandler(fetch_count, preferences); // Request more quotes
 
       // Filter out any quotes that have already been loaded
@@ -90,11 +94,11 @@ export default function Page() {
         {Array.from({ length: 5 }).map((_, index) => (
           <div
             key={index}
-            className="w-4/5 sm:4/5 md:w-8/12 lg:w-8/12 h-60 md:h-80 lg:h-80 sm:h-56 bg-gray-200 rounded-lg animate-pulse transform  relative"
+            className="w-4/5 sm:4/5 md:w-8/12 lg:w-8/12 h-60 md:h-80 lg:h-80 sm:h-56 bg-gray-200 rounded-lg animate-pulse transform relative"
           >
             <div className="h-6 bg-gray-300 rounded w-3/4 mx-auto mt-6"></div>
             <div className="h-4 bg-gray-300 rounded w-3/4 mx-auto mt-3"></div>
-            <div className="h-4 bg-gray-300 rounded w-1/2 mx-auto mt-3 absolute left-12 "></div>
+            <div className="h-4 bg-gray-300 rounded w-1/2 mx-auto mt-3 absolute left-12"></div>
             <div className="h-2 bg-gray-300 rounded w-1/3 absolute bottom-4 right-4"></div>
           </div>
         ))}
@@ -122,7 +126,7 @@ export default function Page() {
           <div className="w-4/5 sm:4/5 md:w-8/12 lg:w-8/12 overflow-hidden h-60 md:h-80 lg:h-80 sm:h-56 bg-gray-200 rounded-lg animate-pulse transform relative">
             <div className="h-6 bg-gray-300 rounded w-3/4 mx-auto mt-6"></div>
             <div className="h-4 bg-gray-300 rounded w-3/4 mx-auto mt-3"></div>
-            <div className="h-4 bg-gray-300 rounded w-1/2 mx-auto mt-3 absolute left-12 "></div>
+            <div className="h-4 bg-gray-300 rounded w-1/2 mx-auto mt-3 absolute left-12"></div>
             <div className="h-2 bg-gray-300 rounded w-1/3 absolute bottom-4 right-4"></div>
           </div>
         </div>
