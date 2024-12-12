@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { getLikeData, handleLike } from '../logics/firebase/like/Like_handler'; // Import the like handler
+import { getLikeData, handleLike } from '../logics/firebase/like/Like_handler'; 
 import { formatNumber } from '../logics/firebase/like/kmb_converter';
 import { generateShortHash } from '../logics/quote_id_gene';
 import { isLikedIdInLocalStorage } from '../logics/firebase/like/fetchLikes_local';
@@ -14,28 +14,20 @@ const ShareLike = ({ quote, author, userId, canvasRef }) => {
   const [showMore, setShowMore] = useState(false);
   const [likes, setLikes] = useState(null);
   const [liked, setLiked] = useState(false);
-  const [loading, setLoading] = useState(false); // Loading state for the like button
+  const [loading, setLoading] = useState(false);
 
-
-  const getLikes = async (quote) => {
-
-    try {
-      // Assuming `getLikeCount` fetches the current like count from your backend (e.g., Firebase)
-      const likeData = await getLikeData(generateShortHash(quote));
-
-      setLikes(likeData.likeCount);
-      if (likeData.likeId !== null) setLiked(isLikedIdInLocalStorage(likeData.likeId));
-
-
-    } catch (error) {
-      console.error("Error fetching like data:", error);
-    }
-  };
-  getLikes(quote);
-
-  {/*for download */ }
-
-
+  useEffect(() => {
+    const getLikes = async () => {
+      try {
+        const likeData = await getLikeData(generateShortHash(quote));
+        setLikes(likeData.likeCount);
+        if (likeData.likeId !== null) setLiked(isLikedIdInLocalStorage(likeData.likeId));
+      } catch (error) {
+        console.error("Error fetching like data:", error);
+      }
+    };
+    getLikes();
+  }, [quote]); // Dependency array ensures this runs once when `quote` changes
 
   const downloadIt = () => {
     const cur = imageDataToDataURL(processCanvasImage(canvasRef));
@@ -49,19 +41,13 @@ const ShareLike = ({ quote, author, userId, canvasRef }) => {
     }
   };
 
-const shareToPlatform=(platform)=>{
-shareToPlatformEx(platform,quote,author);
-};
-
-
-
-
- 
-
+  const shareToPlatform = (platform) => {
+    shareToPlatformEx(platform, quote, author);
+  };
 
   const handleLikeClick = (e) => {
     e.stopPropagation();
-    if (loading) return; // Prevent multiple clicks during loading
+    if (loading) return; 
     setLoading(true);
 
     handleLike(quote, userId, (success) => {
@@ -74,7 +60,7 @@ shareToPlatformEx(platform,quote,author);
       } else {
         console.error("Failed to toggle like state.");
       }
-      setLoading(false); // Hide the loader after the process is complete
+      setLoading(false);
     });
   };
 
@@ -84,7 +70,7 @@ shareToPlatformEx(platform,quote,author);
         {/* Like Button */}
         <button
           onClick={handleLikeClick}
-          className={`text-gray-500 ${liked ? 'text-pink-500' : 'hover:text-pink-500'} flex items-center transform transition-transform hover:scale-110 active:scale-95`}
+          className={` ${liked ? 'text-pink-500' : 'text-gray-500 hover:text-pink-500'} flex items-center transform transition-transform hover:scale-110 active:scale-95`}
           disabled={loading} // Disable the button during loading
         >
           {loading ? (

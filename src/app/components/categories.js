@@ -85,7 +85,7 @@ const BoxCardGrid = () => {
                     left: -20px;
                     right: -20px;
                     bottom: -20px;
-                    background: url('path-to-fog-texture.png') repeat center center / cover;
+                    background:  repeat center center / cover;
                     opacity: .5;
                     animation: moveFog 30s linear infinite;
                 }
