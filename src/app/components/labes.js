@@ -9,7 +9,8 @@ const CardWithLabels = ({ quote , model}) => {
       setLoading(true);
 
       try {
-        const data = await model.predictTop3Categories(quote, false);
+        const lang=/[\u0900-\u097F]/.test(quote) ? "hi" : "en";
+        const data = await model.predictTop3Categories(quote,lang, false);
        
         
         const formattedLabels = data.map(label => label.charAt(0).toUpperCase() + label.slice(1));
