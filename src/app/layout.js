@@ -7,6 +7,7 @@ import ScrollToTopButton from "./components/scrol_to_top";
 import HeadTag from "./components/head_tag";
 import { loadEnvConfig } from '@next/env'
 import Footer from "./components/footer";
+
  
 const projectDir = process.cwd()
 loadEnvConfig(projectDir)

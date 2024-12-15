@@ -5,6 +5,7 @@ import mainHandler from "./logics/MainHandler";
 import { useAuth } from "./logics/firebase/auth_manage";
 import { generateShortHash } from "./logics/quote_id_gene";
 import { fetchLikedData } from "./logics/firebase/like/fetchLikes_local";
+import { useCategoryPredictor } from "./logics/ai/predict";
 
 export default function Page() {
   const [quoteCards, setQuoteCards] = useState([]);
@@ -14,6 +15,7 @@ export default function Page() {
   const [userID, setUserID] = useState(null);
 
   useEffect(() => {
+  
     if (typeof window !== 'undefined') {
       setUserID(localStorage.getItem("firebase_uid"));
     }
@@ -82,12 +84,15 @@ export default function Page() {
       window.removeEventListener("scroll", handleScroll);
     };
   }, [loading]); // Only run this when loading changes
-
+ 
   useEffect(() => {
-    // Initial fetch of quotes when the component is mounted
+
     fetchQuotes(true);
+     
   }, []);
 
+  const modelWeight=  useCategoryPredictor();
+ 
   if (loading && quoteCards.length === 0) {
     return (
       <div className="flex flex-col justify-center items-center space-y-6 py-12">
@@ -114,7 +119,7 @@ export default function Page() {
     <div className="flex flex-wrap justify-center space-x-4 space-y-4">
       {quoteCards.length > 0 ? (
         quoteCards.map((quote, index) => (
-          <QuoteCard key={index} quote={quote.text} author={quote.author} userId={userID} />
+          <QuoteCard key={index} quote={quote.text} author={quote.author} userId={userID} model={modelWeight}/>
         ))
       ) : (
         <p>No quotes available.</p>

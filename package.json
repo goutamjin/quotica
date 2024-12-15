@@ -6,19 +6,22 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "train": "node src/app/logic/ai/trainModel.js"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
     "@material-tailwind/react": "^2.1.10",
     "@next/env": "^15.1.0",
     "autoprefixer": "^10.4.20",
+    "compromise": "^14.14.3",
     "dotenv": "^16.4.7",
     "firebase": "^11.0.2",
     "font-awesome": "^4.7.0",
     "next": "^15.1.0",
     "react": "^18.0.0",
-    "react-dom": "^18.0.0"
+    "react-dom": "^18.0.0",
+    "stopwords": "^0.0.9"
   },
   "devDependencies": {
     "eslint": "^8",

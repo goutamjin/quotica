@@ -17,6 +17,10 @@ export default {
       },
     ],
   },
+
+
+
+
   env: {
     NEXT_PUBLIC_API_KEY: process.env.NEXT_PUBLIC_API_KEY,
     NEXT_PUBLIC_AUTH_DOMAIN: process.env.NEXT_PUBLIC_AUTH_DOMAIN,

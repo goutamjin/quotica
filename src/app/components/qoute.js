@@ -3,12 +3,14 @@
 import { useEffect, useRef, useState } from 'react';
 import ShareLike from './sharelike'; 
 import QuoteImage from './QuoteImage';
+import CardWithLabels from './labes';
 
 
  // Replace with your actual placeholder image path
 
-const QuoteCard = ({ quote, author, userId }) => {
+const QuoteCard = ({ quote, author, userId , model}) => {
   const [inView, setInView] = useState(false);
+  
   const cardRef = useRef(null);
 
 
@@ -34,9 +36,8 @@ const QuoteCard = ({ quote, author, userId }) => {
   }, []);
 
   
-
-    const quote_img=QuoteImage({quote, author});
-
+// to load image
+  const quote_img=QuoteImage({quote, author});
 
   const getImageUrl = () => {
     const width = window.innerWidth;
@@ -52,9 +53,13 @@ const QuoteCard = ({ quote, author, userId }) => {
       // Mobile size
       size = '600/337'; 
     }
+  console.log(size);
   
     return `https://picsum.photos/${size}?random=${Math.random()}`;
   };
+ 
+  
+  
   
   return (
     <div
@@ -81,6 +86,11 @@ const QuoteCard = ({ quote, author, userId }) => {
         <div className="mt-2 text-sm font-medium text-gray-600">— {author}</div>
       </div>
 
+      {/* Categories */}
+      <div className='w-full '>
+      <CardWithLabels  quote={quote} model={model} />
+      </div>
+      
       {/* Social Media Buttons */}
       <div className="flex justify-center items-center gap-4 my-4">
         <ShareLike quote={quote} author={author} userId={userId} canvasRef={quote_img.downloadCanvas} />
