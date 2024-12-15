@@ -6,6 +6,8 @@ import { useAuth } from "./logics/firebase/auth_manage";
 import { generateShortHash } from "./logics/quote_id_gene";
 import { fetchLikedData } from "./logics/firebase/like/fetchLikes_local";
 import { useCategoryPredictor } from "./logics/ai/predict";
+import PullToRefreshCom from "./components/PullToRefresh";
+import BoxCardGrid from "./components/categories";
 
 export default function Page() {
   const [quoteCards, setQuoteCards] = useState([]);
@@ -13,6 +15,11 @@ export default function Page() {
   const [error, setError] = useState(null);
   const [loadedQuoteHashes, setLoadedQuoteHashes] = useState(new Set()); // To track already loaded quotes
   const [userID, setUserID] = useState(null);
+
+// for refrshing
+const [triggerRefresh, setTriggerRefresh] = useState(0);
+
+
 
   useEffect(() => {
   
@@ -85,26 +92,55 @@ export default function Page() {
     };
   }, [loading]); // Only run this when loading changes
  
-  useEffect(() => {
 
+
+
+
+
+// Add useEffect to handle the refresh trigger
+useEffect(() => {
+  if (triggerRefresh) {
+    console.log("tiggered");
+    setQuoteCards([]);  // Empty the quoteCards array
     fetchQuotes(true);
-     
+  }
+}, [triggerRefresh]);
+
+
+
+
+
+
+  useEffect(() => {
+    console.log("refreshed");
+    fetchQuotes(true);  // Fetch new quotes for first time
   }, []);
 
+
+
   const modelWeight=  useCategoryPredictor();
- 
+ function getReturn(){
   if (loading && quoteCards.length === 0) {
     return (
       <div className="flex flex-col justify-center items-center space-y-6 py-12">
         {Array.from({ length: 5 }).map((_, index) => (
           <div
             key={index}
-            className="w-4/5 sm:4/5 md:w-8/12 lg:w-8/12 h-60 md:h-80 lg:h-80 sm:h-56 bg-gray-200 rounded-lg animate-pulse transform relative"
+            className="h-full bg-gray-200 rounded-lg animate-pulse transform relative"
+            style={{
+              maxWidth: '90%', // Ensures the card doesn't exceed 90% of screen width
+              width: '600px',
+            }}
           >
-            <div className="h-6 bg-gray-300 rounded w-3/4 mx-auto mt-6"></div>
-            <div className="h-4 bg-gray-300 rounded w-3/4 mx-auto mt-3"></div>
-            <div className="h-4 bg-gray-300 rounded w-1/2 mx-auto mt-3 absolute left-12"></div>
-            <div className="h-2 bg-gray-300 rounded w-1/3 absolute bottom-4 right-4"></div>
+            <div className="h-60 bg-gray-300 rounded w-full"></div>
+            <div className="h-5 bg-gray-300 rounded w-3/4  mt-4 ml-8"></div>
+            <div className="h-5 bg-gray-300 rounded w-1/2  mt-3 ml-8"></div>
+
+            <div className="h-5 bg-gray-300 rounded-full w-16 ml-10 mt-4 mb-4 inline-block"></div>
+            <div className="h-5 bg-gray-300 rounded-full w-16 ml-2 mt-4 mb-4 inline-block"></div>
+
+            <div className="h-5 bg-gray-300 rounded w-1/2 mx-auto mt-4 mb-6"></div>
+            <div className="h-2 bg-gray-300 rounded w-1/4 mx-auto mt-2 absolute bottom-2 right-2"></div>
           </div>
         ))}
       </div>
@@ -116,26 +152,56 @@ export default function Page() {
   }
 
   return (
+   
     <div className="flex flex-wrap justify-center space-x-4 space-y-4">
       {quoteCards.length > 0 ? (
         quoteCards.map((quote, index) => (
           <QuoteCard key={index} quote={quote.text} author={quote.author} userId={userID} model={modelWeight}/>
         ))
       ) : (
-        <p>No quotes available.</p>
+        <p>Im trying...</p>
       )}
 
       {loading && (
-        <div className="flex justify-center items-center w-full py-12">
-          {/* Loading skeleton */}
-          <div className="w-4/5 sm:4/5 md:w-8/12 lg:w-8/12 overflow-hidden h-60 md:h-80 lg:h-80 sm:h-56 bg-gray-200 rounded-lg animate-pulse transform relative">
-            <div className="h-6 bg-gray-300 rounded w-3/4 mx-auto mt-6"></div>
-            <div className="h-4 bg-gray-300 rounded w-3/4 mx-auto mt-3"></div>
-            <div className="h-4 bg-gray-300 rounded w-1/2 mx-auto mt-3 absolute left-12"></div>
-            <div className="h-2 bg-gray-300 rounded w-1/3 absolute bottom-4 right-4"></div>
-          </div>
-        </div>
-      )}
+        <div className={`${(window.innerWidth >= 1024? " pr-12 ":window.innerWidth >= 768? " pr-4 ":" pr-4 ")} relative`}
+        style={{
+          maxWidth: '90%', // Ensures the card doesn't exceed 90% of screen width
+          width: '600px',
+        }}
+        >
+        <div 
+        className=" w-full mb-12 h-full bg-gray-200 rounded-lg animate-pulse transform relative"
+      >
+        
+        <div className="h-60 bg-gray-300 rounded w-full"></div>
+        <div className="h-5 bg-gray-300 rounded w-3/4  mt-4 ml-8"></div>
+        <div className="h-5 bg-gray-300 rounded w-1/2  mt-3 ml-8"></div>
+
+        <div className="h-5 bg-gray-300 rounded-full w-16 ml-10 mt-4 mb-4 inline-block"></div>
+        <div className="h-5 bg-gray-300 rounded-full w-16 ml-2 mt-4 mb-4 inline-block"></div>
+
+        <div className="h-5 bg-gray-300 rounded w-1/2 mx-auto mt-4 mb-6"></div>
+        <div className="h-2 bg-gray-300 rounded w-1/4 mx-auto mt-2 absolute bottom-2 right-2"></div>
+      </div>
+      </div>
+   )}
     </div>
+
   );
+ }
+
+
+
+
+
+
+return (
+       
+  <PullToRefreshCom tiggerRef={setTriggerRefresh}>
+  <BoxCardGrid />
+  {getReturn()}
+  </PullToRefreshCom>
+
+);
+
 }

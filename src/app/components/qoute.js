@@ -39,24 +39,7 @@ const QuoteCard = ({ quote, author, userId , model}) => {
 // to load image
   const quote_img=QuoteImage({quote, author});
 
-  const getImageUrl = () => {
-    const width = window.innerWidth;
-    let size;
   
-    if (width >= 1024) {
-      // Desktop size
-      size = '1600/900';
-    } else if (width >= 768) {
-      // Tablet size
-      size = '1200/675';
-    } else {
-      // Mobile size
-      size = '600/337'; 
-    }
-  console.log(size);
-  
-    return `https://picsum.photos/${size}?random=${Math.random()}`;
-  };
  
   
   
@@ -97,6 +80,17 @@ const QuoteCard = ({ quote, author, userId , model}) => {
       </div>
     </div>
   );
+};
+export const getImageSize = () => {
+  const width = window.innerWidth;
+
+  if (width >= 1024) {
+    return { width: 1600, height: 900 }; // Desktop size
+  } else if (width >= 768) {
+    return { width: 1200, height: 675 }; // Tablet size
+  } else {
+    return { width: 600, height: 337 }; // Mobile size
+  }
 };
 
 
