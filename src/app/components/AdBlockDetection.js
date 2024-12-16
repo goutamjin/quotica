@@ -71,7 +71,7 @@ const support=(isSupport)=>{
               <button
                 className="px-4 py-2 bg-green-500 text-white rounded-lg shadow-sm hover:to-green-500 hover:from-rose-500 hover:bg-gradient-to-r hover: transition-all transform transition-transform hover:scale-110 active:scale-95" 
                  onClick={()=>support(true)}>
-                I'll Support!
+                I&apos;ll Support!
               </button>
             </div>
           </div>
