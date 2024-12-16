@@ -57,7 +57,7 @@ const support=(isSupport)=>{
             style={{ animationDuration: "300ms" }}
           >
             <div className="text-base font-sens">
-            🍪 Hi there! We noticed you're using an ad blocker. Cookies help us bring you an even better experience. Would you consider turning it off? 💖
+            🍪 Hi there! We noticed you&apos;re using an ad blocker. Cookies help us bring you an even better experience. Would you consider turning it off? 💖
             </div>
             <div className="mt-4 flex justify-end gap-4">
               <button
