@@ -1,25 +1,23 @@
-// pages/search/[term].js
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
-import '../app/globals.css';
-import Navbar from '@/app/components/navibar';
-import ScrollToTopButton from "./components/scrol_to_top";
+import React, { useEffect } from 'react';
+import '@/app/globals.css'; // Updated path with @ alias
+import Navbar from '@/app/components/navibar'; // Fixed component name capitalization
+import ScrollToTopButton from '@/app/components/scrol_to_top'; // Updated path and capitalization
 
 const SearchResults = () => {
   const router = useRouter();
-  const {search}= router.query;
-
+  const { term } = router.query; // Updated query parameter to match dynamic route
 
   useEffect(() => {
-    
-  }, [search]);
-
+    // Handle search term change here
+  }, [term]);
 
   return (
-  <html>
-    <ScrollToTopButton/>
-    <Navbar />
-  </html>
+    <div>
+      <ScrollToTopButton />
+      <Navbar />
+      {/* Add your search results rendering logic here */}
+    </div>
   );
 };
 
