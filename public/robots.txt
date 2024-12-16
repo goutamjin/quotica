@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://quotica.life
+
+# Sitemaps
+Sitemap: https://quotica.life/sitemap.xml
