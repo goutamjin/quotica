@@ -1,3 +1,5 @@
+import { fixed_web_short_link } from "./other/fixedData";
+
 {/*get proccessed canvas for download */ }
 
 export function imageDataToDataURL(imageData) {
@@ -207,7 +209,7 @@ return (
 
 
 export const shareToPlatformEx = async (platform, quote, author) => {
-  const message = encodeURIComponent(`${quote} - ${author}`);
+  const message = encodeURIComponent(`${quote} - ${fixed_web_short_link}`);
   let url = null;
 
   // Construct platform-specific share URLs with the uploaded image link

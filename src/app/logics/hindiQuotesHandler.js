@@ -15,7 +15,8 @@ const hindiQuotesHandler = async (count = 5) => {
         if (data && data.quote) {
           quotes.push({
             text: data.quote, // Use "quote" from API response
-            author: "Unknown Author", // Default author since it's not provided
+            author: "अज्ञात",
+            weblink:"https://hindi-quotes.vercel.app" // Default author since it's not provided
           });
         } else {
           throw new Error("Invalid data format received.");

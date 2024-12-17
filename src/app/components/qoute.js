@@ -1,17 +1,20 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import ShareLike from './sharelike'; 
+import ShareLike from './sharelike';
 import QuoteImage from './QuoteImage';
-import CardWithLabels from './labes';
+import CardWithLabels from './labels';
+import LabelOrignal from './label_orignal';
+import { fixed_author_name } from '../logics/other/fixedData';
 
+// Replace with your actual placeholder image path
 
- // Replace with your actual placeholder image path
-
-const QuoteCard = ({ quote, author, userId , model}) => {
+const QuoteCard = ({ quote, author, userId, model , link}) => {
   const [inView, setInView] = useState(false);
-  
+
   const cardRef = useRef(null);
+  
+  author=(author=="null"||!author)? fixed_author_name:author;
 
 
   useEffect(() => {
@@ -35,21 +38,20 @@ const QuoteCard = ({ quote, author, userId , model}) => {
     };
   }, []);
 
-  
-// to load image
-  const quote_img=QuoteImage({quote, author});
 
-  
- 
-  
-  
-  
+  // to load image
+  const quote_img = QuoteImage({ quote, author });
+
+
+
+
+
+
   return (
     <div
       ref={cardRef}
-      className={`flex flex-col items-center bg-white shadow-lg rounded-lg overflow-hidden transition-opacity duration-700 ${
-        inView ? 'opacity-100' : 'opacity-0'
-      }`}
+      className={`flex flex-col items-center bg-white shadow-lg rounded-lg overflow-hidden transition-opacity duration-700 ${inView ? 'opacity-100' : 'opacity-0'
+        }`}
       style={{
         maxWidth: '90%', // Ensures the card doesn't exceed 90% of screen width
         width: '600px', // Fixed width for desktop
@@ -58,27 +60,34 @@ const QuoteCard = ({ quote, author, userId , model}) => {
     >
       {/* Image Section */}
       <div className="w-full h-60 md:h-80 lg:h-80 sm:h-56 relative bg-gray-300 overflow-hidden">
-      {quote_img.Image}
+        {quote_img.Image}
       </div>
 
       {/* Quote Content */}
       <div className="p-4 text-center">
         <blockquote className="text-lg font-semibold text-gray-800 italic">
-        &quot;{quote}&quot;
+          &quot;{quote}&quot;
         </blockquote>
         <div className="mt-2 text-sm font-medium text-gray-600">— {author}</div>
       </div>
 
       {/* Categories */}
       <div className='w-full '>
-      <CardWithLabels  quote={quote} model={model} />
+        <CardWithLabels quote={quote} model={model} />
       </div>
-      
+
       {/* Social Media Buttons */}
-      <div className="flex justify-center items-center gap-4 my-4">
+      <div className="flex justify-center items-center gap-4 my-4 relative bottom-0">
         <ShareLike quote={quote} author={author} userId={userId} canvasRef={quote_img.downloadCanvas} />
       </div>
+
+
+      {/* Open orignal web link */}
+      <LabelOrignal link={link}/>
+
+
     </div>
+
   );
 };
 export const getImageSize = () => {

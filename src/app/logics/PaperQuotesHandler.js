@@ -24,6 +24,7 @@ const fetchPaperQuotes = async (quoteCount, tags = '', curated = false) => {
   return data.results.map(quote => ({
     text: quote.quote,
     author: quote.author,
+    weblink:"https://paperquotes.com"
     }));
   
 };

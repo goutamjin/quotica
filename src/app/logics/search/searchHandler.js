@@ -1,16 +1,16 @@
-import hindiQuotesHandler from "./hindiQuotesHandler";
-import fetchDummyJsonQuotes from "./DummyJsonQuotes";
-import fetchPaperQuotes   from "./PaperQuotesHandler";
-import fetchIndianQuotes from "./fetchIndianQuotes";
+import hindiQuotesHandler from "../hindiQuotesHandler";
+import fetchDummyJsonQuotes from "../DummyJsonQuotes";
+import fetchPaperQuotes   from "../PaperQuotesHandler";
+import fetchIndianQuotes from "../fetchIndianQuotes";
 // Import other sub-handlers when needed, e.g. zenQuotesHandler
 
-const mainHandler = async (count = 5, preferences = {}) => {
+const searchHandler = async (count = 5, preferences = { lang:"en" }, searchTerm) => {
   try {
     // Define the percentages for sub-handlers
     const subHandlersPercentages = [
-      { handler: hindiQuotesHandler, percentage: 50}, 
-      { handler: fetchDummyJsonQuotes , percentage: 50},
-      { handler: fetchPaperQuotes , percentage: 50 },
+      { handler: hindiQuotesHandler, percentage: ((preferences.lang)=="hi"? 80:20)}, 
+      { handler: fetchDummyJsonQuotes , percentage: ((preferences.lang)=="hi"? 20:60)},
+      { handler: fetchPaperQuotes , percentage: ((preferences.lang)=="hi"? 20:60) },
     //  { handler: fetchIndianQuotes , percentage: 0 }
     ];
 
@@ -43,4 +43,4 @@ const shuffleArray = (array) => {
   }
   return array;
 };
-export default mainHandler;
+export default searchHandler;

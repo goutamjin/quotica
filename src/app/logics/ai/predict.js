@@ -105,6 +105,21 @@ class CategoryPredictor {
         return termFreq;
     }
 
+    async predictTop3CategoriesBatch(texts, lang){
+        if (!Array.isArray(texts) || texts.length === 0) {
+          throw new Error('Invalid input: texts should be a non-empty array.');
+        }
+      
+        // Simulates batch prediction using Promise.all for asynchronous processing
+        const predictions = await Promise.all(
+          texts.map((text) => this.predictTop3Categories(text, lang, false))
+        );
+      
+        return predictions;
+      };
+
+
+
     async predictTop3Categories(quote, lang = 'en', withProbabilities = false) {
         if (lang === 'en' && !this.categoryWeights_en) {
             await this.loadAndSaveWeights('en');
