@@ -2,16 +2,17 @@ import hindiQuotesHandler from "./hindiQuotesHandler";
 import fetchDummyJsonQuotes from "./DummyJsonQuotes";
 import fetchPaperQuotes   from "./PaperQuotesHandler";
 import fetchIndianQuotes from "./fetchIndianQuotes";
+import fetchQuotesOwn from "./fetchIndianQuotes";
 // Import other sub-handlers when needed, e.g. zenQuotesHandler
 
-const mainHandler = async (count = 5, preferences = {}) => {
+const mainHandler = async (count = 5, preferences = {},searchTerm = '') => {
   try {
     // Define the percentages for sub-handlers
     const subHandlersPercentages = [
-      { handler: hindiQuotesHandler, percentage: 50}, 
-      { handler: fetchDummyJsonQuotes , percentage: 50},
-      { handler: fetchPaperQuotes , percentage: 50 },
-    //  { handler: fetchIndianQuotes , percentage: 0 }
+      { handler: hindiQuotesHandler, percentage: 0}, 
+      { handler: fetchDummyJsonQuotes , percentage: 0},
+      //{ handler: fetchPaperQuotes , percentage: 0 },
+     { handler: fetchQuotesOwn , percentage: 50 }
     ];
 
     // Calculate how many quotes to fetch from each sub-handler
@@ -21,7 +22,8 @@ const mainHandler = async (count = 5, preferences = {}) => {
 
       // Calculate the number of quotes for this handler based on the percentage
       const quotesToFetch = Math.ceil((count * percentage) / 100);
-
+      console.log(quotesToFetch,handler.name);
+      
       // Fetch the quotes from the sub-handler
       const quotes = await handler(quotesToFetch,searchTerm);
       

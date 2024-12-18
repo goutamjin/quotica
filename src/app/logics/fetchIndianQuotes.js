@@ -1,40 +1,43 @@
-
-const fetchIndianQuotes = async (quoteCount = 10) => {
+const fetchQuotesOwn = async (quoteCount = 5, random = true) => {
   try {
-         
-      // Generate a random page number, e.g., between 1 and 100 (adjust as per API's data)
-      const randomPage = Math.floor(Math.random() * 100) + 1;
+    // Your API key (keep this secure in an environment variable on the server)
+    const apiKey = process.env.NEXT_PUBLIC_QUOTES_API_KEY; // Replace with your actual environment variable
 
-      // Define the URL for the API call with random page and limit
-      const response = await fetch(`https://indian-quotes-api.vercel.app/api/quotes?page=${randomPage}&limit=${quoteCount}`,{
+    // Define the URL for the API call, passing in the limit, random flag, and API key
+    const response = await fetch(
+      `http://localhost:3000/api/quote_api?limit=${quoteCount}&random=${random}&apiKey=${apiKey}`,
+      {
         mode: 'cors',
         headers: {
-          'Access-Control-Allow-Origin':'*'
-        }
-      });
-
-      // Check if the response is okay
-      if (!response.ok) {
-          return []; // Return an empty array if the response is not okay
+          'Access-Control-Allow-Origin': '*', // Allow your frontend to call the API
+        },
       }
+    );
 
-      // Parse the JSON response
-      const jsonResponse = await response.json();
-      
-      // Extract the data array
-      const data = jsonResponse.data;
+    // Check if the response is okay
+    if (!response.ok) {
+      console.error('Failed to fetch quotes');
+      return []; // Return an empty array if the response is not okay
+    }
 
-      // Format the data to return only the quote text and author
-      const formattedQuotes = data.map((quote) => ({
-          text: quote.quote,
-          author: quote.author.name,
-          weblink:"https://indian-quotes-api.vercel.app"
-      }));
+    // Parse the JSON response
+    const jsonResponse = await response.json();
 
-      return formattedQuotes; // Return the formatted quotes
+    // Extract the quotes array from the response
+    const data = jsonResponse.quotes;
+
+    // Format the data to return only the quote text and author
+    const formattedQuotes = data.map((quote) => ({
+      text: quote.quote,
+      author: quote.author,
+      weblink: "https://your-vercel-domain", // Provide the correct domain here
+    }));
+
+    return formattedQuotes; // Return the formatted quotes
   } catch (error) {
-      console.error("Indian Quotes Handler Error:", error);
-      return []; // Return an empty array in case of an error
+    console.error('Quotes Handler Error:', error);
+    return []; // Return an empty array in case of an error
   }
 };
-export default fetchIndianQuotes;
+
+export default fetchQuotesOwn;

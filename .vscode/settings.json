@@ -5,5 +5,9 @@
           "**/.DS_Store": true,
            "**/model_en.js": true ,
            "**/model_hi.js": true 
-        }
+        },
+
+        "eslint.options": { 
+            "**/quotes_data.json": true
+         }
 }

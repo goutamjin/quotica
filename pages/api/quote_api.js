@@ -1,9 +1,11 @@
-// CDN URL for the JSON file
-const JSON_CDN_URL = "https://temp.staticsave.com/6762f93b84f68.json"; // Replace with your actual CDN URL
+import path from "path";
+import fs from "fs/promises";
 
-// Your allowed origin and secret API key (set in environment variables)
-const ALLOWED_ORIGIN = "http://localhost:3000/"; // Replace with your actual domain
-const SECRET_API_KEY = process.env.SECRET_API_KEY; // Store securely in Vercel
+// Directory containing JSON chunk files
+const CHUNKS_DIR = path.join(process.cwd(), "quote_chunks");
+
+// Total number of chunks
+const CHUNKS_COUNT = 10; // Adjust based on the actual number of chunks
 
 // Helper function to get random keys
 function getRandomKeys(keys, count) {
@@ -17,32 +19,27 @@ function getRandomKeys(keys, count) {
 
 export default async function handler(req, res) {
   try {
-    const { limit = 5, random = false, apiKey } = req.query;
+    const { limit = 5, apiKey } = req.query;
 
     // Validate limit
     const parsedLimit = Math.min(Number(limit), 100); // Cap limit to 100
     if (isNaN(parsedLimit) || parsedLimit <= 0) {
-      return res.status(400).json({ error: 'Invalid limit parameter' });
+      return res.status(400).json({ error: "Invalid limit parameter" });
     }
 
-    // Fetch JSON data from CDN
-    const response = await fetch(JSON_CDN_URL);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch quotes from CDN: ${response.statusText}`);
-    }
-    const quotes = await response.json();
+    // Select a random chunk file
+    const randomChunkIndex = Math.floor(Math.random() * CHUNKS_COUNT) + 1;
+    const chunkFilePath = path.join(CHUNKS_DIR, `quote_chunk${randomChunkIndex}.json`);
+
+    // Read the chunk file
+    const fileData = await fs.readFile(chunkFilePath, "utf-8");
+    const quotes = JSON.parse(fileData);
 
     // Get all the keys (quote identifiers)
     const keys = Object.keys(quotes);
 
-    let selectedKeys;
-    if (random === 'true') {
-      // Get random keys
-      selectedKeys = getRandomKeys(keys, parsedLimit);
-    } else {
-      // Get the first N keys for non-random requests
-      selectedKeys = keys.slice(0, parsedLimit);
-    }
+    // Get random keys
+    const selectedKeys = getRandomKeys(keys, parsedLimit);
 
     // Fetch corresponding quotes
     const selectedQuotes = selectedKeys.map((key) => ({
@@ -50,9 +47,10 @@ export default async function handler(req, res) {
       author: quotes[key],
     }));
 
+    // Return the selected quotes
     res.status(200).json({ quotes: selectedQuotes });
   } catch (error) {
-    console.error('Error processing request:', error.message);
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error("Error processing request:", error.message);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 }
