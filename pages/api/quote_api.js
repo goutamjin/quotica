@@ -18,7 +18,7 @@ export default async function handler(req, res) {
   try {
     // Handle preflight OPTIONS request
     if (req.method === "OPTIONS") {
-      res.setHeader("Access-Control-Allow-Origin", "https://www.quotica.life"); // Replace with your domain
+      res.setHeader("Access-Control-Allow-Origin", "*"); // Replace with your domain
       res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
       res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
       res.status(204).end();
@@ -26,7 +26,7 @@ export default async function handler(req, res) {
     }
 
     // Add CORS headers for all other requests
-    res.setHeader("Access-Control-Allow-Origin", "https://www.quotica.life"); // Replace with your domain
+    res.setHeader("Access-Control-Allow-Origin", "*"); // Replace with your domain
     res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
 

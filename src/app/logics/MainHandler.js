@@ -23,9 +23,9 @@ const mainHandler = async (count = 5, preferences = {},searchTerm = '') => {
       // Calculate the number of quotes for this handler based on the percentage
       const quotesToFetch = Math.ceil((count * percentage) / 100);
       console.log(quotesToFetch,handler.name);
-      
+      let quotes=[];
       // Fetch the quotes from the sub-handler
-      const quotes = await handler(quotesToFetch,searchTerm);
+      if(quotesToFetch>0) quotes = await handler(quotesToFetch,searchTerm);
       
       
       totalQuotes = [...totalQuotes, ...quotes]; // Combine all fetched quotes
