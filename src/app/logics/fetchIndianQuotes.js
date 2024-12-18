@@ -5,7 +5,7 @@ const fetchQuotesOwn = async (quoteCount = 5, random = true) => {
 
     // Define the URL for the API call, passing in the limit, random flag, and API key
     const response = await fetch(
-      `http://localhost:3000/api/quote_api?limit=${quoteCount}&random=${random}&apiKey=${apiKey}`,
+      `https://quotica.life/api/quote_api?limit=${quoteCount}&random=${random}&apiKey=${apiKey}`,
       {
         mode: 'cors',
         headers: {
