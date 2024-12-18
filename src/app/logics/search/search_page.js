@@ -123,7 +123,7 @@ export default function PageSearch({ search }) {
             <QuoteCard key={index} quote={quote.text} author={quote.author} userId={userID} model={modelWeight} link={quote.weblink} />
           ))
         ) : (
-          <p>I'm trying...</p>
+          <p>I&apos;m trying...</p>
         )}
         {loading && (
           <div className="relative" style={{ maxWidth: '90%', width: '600px' }}>
