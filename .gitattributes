@@ -1,0 +1,2 @@
+pages/api/quotes_data.json filter=lfs diff=lfs merge=lfs -text
+pages/api/quotes_data.json filter=lfs diff=lfs merge=lfs -text
