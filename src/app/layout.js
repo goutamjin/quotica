@@ -21,7 +21,7 @@ export default function RootLayout({ children }) {
   return (
     <html>
       <Head>
-      </Head>
+       </Head>
       <body className="bg-gray-100">
         <NavbarWithSubmenu />
         <AdBlockDetection />

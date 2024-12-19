@@ -16,14 +16,18 @@ const fuseMatch = (text, term) => {
 
 export const filterQuotesUntilThreshold = async (fetchCount, preferences, loadedQuoteHashes, searchTerm, model) => {
   let filteredQuotes = [];
+  let requestCount = 0; // Variable to count requests
   const maxIterations = 20; // Max attempts to fetch quotes
   let iterations = 0;
- preferences={lang:(/[\u0900-\u097F]/.test(searchTerm) ? "hi" : "en")}
+
+  preferences = { lang: (/[\u0900-\u097F]/.test(searchTerm) ? "hi" : "en") };
+
   while (filteredQuotes.length < fetchCount && iterations < maxIterations) {
     iterations++;
     try {
       // Fetch raw quotes
       const quotes = await searchHandler(fetchCount, preferences, searchTerm);
+      requestCount++; // Increase request count for each fetch
 
       // Lightweight pre-filtering: uniqueness and basic text match
       const preFilteredQuotes = quotes.filter((quote) => {
@@ -51,7 +55,7 @@ export const filterQuotesUntilThreshold = async (fetchCount, preferences, loaded
 
         // Check if search term matches predicted categories
         if (predictedCategories.some((category) => fuseMatch(category, searchTerm))) {
-          points += 3; // Lower weight for category match
+          points += 5; // Lower weight for category match
         }
 
         return { ...quote, matchPoints: points };
@@ -78,5 +82,5 @@ export const filterQuotesUntilThreshold = async (fetchCount, preferences, loaded
     console.warn(`Reached max iterations (${maxIterations}). Returning available quotes.`);
   }
 
-  return filteredQuotes.slice(0, fetchCount); // Return only required number of quotes
+  return { quotes: filteredQuotes.slice(0, fetchCount), requestCount }; // Return quotes and request count
 };

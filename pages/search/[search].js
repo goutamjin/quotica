@@ -6,6 +6,7 @@ import '@/app/globals.css';
 import Navbar from '@/app/components/navibar';
 import ScrollToTopButton from '@/app/components/scrol_to_top';
 import PageSearch from '@/app/logics/search/search_page';
+import Footer from '@/app/components/footer';
 
 const SearchResults = () => {
   const router = useRouter();
@@ -19,6 +20,7 @@ const SearchResults = () => {
         <span className='search_heading'>{search}</span>
       </div>
       <PageSearch search={search}/>
+      <Footer/>
     </div>
   );
 };

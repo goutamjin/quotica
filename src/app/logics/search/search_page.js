@@ -1,5 +1,3 @@
-'use client';
-
 import React, { useState, useEffect } from 'react';
 import QuoteCard from '../../components/qoute';
 import { useAuth } from '../firebase/auth_manage';
@@ -8,6 +6,8 @@ import { useCategoryPredictor } from '../ai/predict';
 import PullToRefreshCom from '../../components/PullToRefresh';
 import { filterQuotesUntilThreshold } from './search_filter';
 
+const PENALTY_THRESHOLD = 50;  // Threshold for penalty points
+
 export default function PageSearch({ search }) {
   const [quoteCards, setQuoteCards] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -15,12 +15,16 @@ export default function PageSearch({ search }) {
   const [loadedQuoteHashes, setLoadedQuoteHashes] = useState(new Set()); // Track loaded quotes
   const [userID, setUserID] = useState(null);
   const [triggerRefresh, setTriggerRefresh] = useState(0);
-  
+
   // AI model weight
   const modelWeight = useCategoryPredictor();
 
+  // Penalty points for this search term
+  const [penaltyPoints, setPenaltyPoints] = useState(0);
+  const [noMoreQuotes, setNoMoreQuotes] = useState(false);  // State for no more quotes
+
   // Call useAuth at the top level
-  const { isLogin, uid } = useAuth(()=>{}) || {};
+  const { isLogin, uid } = useAuth(() => {}) || {};
 
   // Handle user login and fetch liked data
   useEffect(() => {
@@ -40,14 +44,22 @@ export default function PageSearch({ search }) {
 
   // Function to reset state for a new search
   const resetState = () => {
-    setQuoteCards([]);
-    setLoadedQuoteHashes(new Set());
-    setError(null);
-    setTriggerRefresh(0);
+    setQuoteCards([]);  // Clear quotes
+    setLoadedQuoteHashes(new Set());  // Clear loaded hashes
+    setError(null);  // Reset error
+    setTriggerRefresh(0);  // Reset refresh trigger
+    setPenaltyPoints(0);  // Reset penalty points
+    setNoMoreQuotes(false);  // Reset noMoreQuotes flag
   };
 
   // Function to fetch and filter quotes
   const fetchQuotes = async (isNewFetch = true, searchTerm = '') => {
+    // Check penalty points before making a request
+    if (penaltyPoints >= PENALTY_THRESHOLD) {
+      setNoMoreQuotes(true);  // Set the flag to indicate no more quotes
+      return;  // Don't make the request if penalty points are too high
+    }
+
     setLoading(true);
     setError(null);
 
@@ -56,11 +68,15 @@ export default function PageSearch({ search }) {
       const fetchCount = window.innerWidth <= 768 ? 5 : window.innerWidth <= 1024 ? 8 : 12;
 
       // Use helper function to fetch and filter quotes
-      const quotes = await filterQuotesUntilThreshold(fetchCount, preferences, loadedQuoteHashes, searchTerm, modelWeight);
-
+      const { quotes, requestCount } = await filterQuotesUntilThreshold(fetchCount, preferences, loadedQuoteHashes, searchTerm, modelWeight);
+     
+      // Add penalty points based on the number of failed requests
+      setPenaltyPoints((prevPoints) => prevPoints + requestCount);
+      console.log(penaltyPoints+requestCount,quoteCards.length+quotes.length);
       if (quotes.length > 0) {
         setQuoteCards((prevQuotes) => (isNewFetch ? quotes : [...prevQuotes, ...quotes]));
       }
+
     } catch (error) {
       setError('Failed to fetch quotes.');
       console.error(error);
@@ -75,14 +91,14 @@ export default function PageSearch({ search }) {
       const scrollPosition = window.innerHeight + document.documentElement.scrollTop;
       const bottomPosition = document.documentElement.offsetHeight;
 
-      if (scrollPosition >= bottomPosition - 200 && !loading) {
+      if (scrollPosition >= bottomPosition - 200 && !loading && !noMoreQuotes) {
         fetchQuotes(false, search);
       }
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [loading, search]);
+  }, [loading, search, noMoreQuotes]);
 
   // Trigger refresh
   useEffect(() => {
@@ -136,6 +152,11 @@ export default function PageSearch({ search }) {
               <div className="h-5 bg-gray-300 rounded w-1/2 mx-auto mt-4 mb-6"></div>
               <div className="h-2 bg-gray-300 rounded w-1/4 mx-auto mt-2 absolute bottom-2 right-2"></div>
             </div>
+          </div>
+        )}
+        {noMoreQuotes && (
+          <div className="text-center mt-6 mb-6 text-gray-500">
+            No more quotes available for this search term.
           </div>
         )}
       </div>

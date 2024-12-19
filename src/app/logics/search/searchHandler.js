@@ -11,7 +11,7 @@ const searchHandler = async (count = 5, preferences = { lang:"en" }, searchTerm)
       { handler: hindiQuotesHandler, percentage: ((preferences.lang)=="hi"? 80:20)}, 
       { handler: fetchDummyJsonQuotes , percentage: ((preferences.lang)=="hi"? 20:60)},
       { handler: fetchPaperQuotes , percentage: ((preferences.lang)=="hi"? 20:60) },
-    //  { handler: fetchIndianQuotes , percentage: 0 }
+      { handler: fetchIndianQuotes , percentage: ((preferences.lang)=="hi"? 100:20) }
     ];
 
     // Calculate how many quotes to fetch from each sub-handler
