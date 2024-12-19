@@ -6,7 +6,7 @@ import QuoteImage from './QuoteImage';
 import CardWithLabels from './labels';
 import LabelOrignal from './label_orignal';
 import { fixed_author_name } from '../logics/other/fixedData';
-
+import ExpendableQuote from './expendableQuote';
 // Replace with your actual placeholder image path
 
 const QuoteCard = ({ quote, author, userId, model , link}) => {
@@ -65,9 +65,7 @@ const QuoteCard = ({ quote, author, userId, model , link}) => {
 
       {/* Quote Content */}
       <div className="p-4 text-center">
-        <blockquote className="text-lg font-semibold text-gray-800 italic">
-          &quot;{quote}&quot;
-        </blockquote>
+        <ExpendableQuote quote={quote}/>
         <div className="mt-2 text-sm font-medium text-gray-600">— {author}</div>
       </div>
 

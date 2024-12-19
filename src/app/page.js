@@ -159,7 +159,9 @@ useEffect(() => {
           <QuoteCard key={index} quote={quote.text} author={quote.author} userId={userID} model={modelWeight} link={quote.weblink}/>
         ))
       ) : (
-        <p>Im trying...</p>
+        <div className="text-center mt-6 mb-6 text-gray-500">
+            No more quotes available.
+          </div>
       )}
 
       {loading && (

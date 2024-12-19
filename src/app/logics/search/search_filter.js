@@ -1,3 +1,4 @@
+'use client'
 import Fuse from 'fuse.js'; // Import Fuse.js
 import { generateShortHash } from "../quote_id_gene";
 import searchHandler from './searchHandler';

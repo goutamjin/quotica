@@ -72,7 +72,7 @@ export default function PageSearch({ search }) {
      
       // Add penalty points based on the number of failed requests
       setPenaltyPoints((prevPoints) => prevPoints + requestCount);
-      console.log(penaltyPoints+requestCount,quoteCards.length+quotes.length);
+     
       if (quotes.length > 0) {
         setQuoteCards((prevQuotes) => (isNewFetch ? quotes : [...prevQuotes, ...quotes]));
       }
@@ -139,7 +139,9 @@ export default function PageSearch({ search }) {
             <QuoteCard key={index} quote={quote.text} author={quote.author} userId={userID} model={modelWeight} link={quote.weblink} />
           ))
         ) : (
-          <p>I&apos;m trying...</p>
+          <div className="text-center mt-6 mb-6 text-gray-500">
+            No more quotes available for this search term.
+          </div>
         )}
         {loading && (
           <div className="relative" style={{ maxWidth: '90%', width: '600px' }}>
