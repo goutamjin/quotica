@@ -4,6 +4,12 @@ import fs from "fs/promises";
 // Directory containing JSON chunk files
 const CHUNKS_DIR = path.join(process.cwd(), "quote_chunks");
 
+// Allowed origins
+const ALLOWED_ORIGINS = ["https://www.quotica.life", "http://localhost:3000"];
+
+// Secret API key
+const SECRET_API_KEY = process.env.SECRET_API_KEY;
+
 // Helper function to get random keys
 function getRandomKeys(keys, count) {
   const randomKeys = new Set();
@@ -16,21 +22,31 @@ function getRandomKeys(keys, count) {
 
 export default async function handler(req, res) {
   try {
+    const origin =  req.headers.origin || "http://localhost:3000"
+    
+    // Set CORS headers
+    if (origin && ALLOWED_ORIGINS.includes(origin)) {
+      res.setHeader("Access-Control-Allow-Origin", origin);
+    } else {
+      return res.status(403).json({ error: "Forbidden: Origin not allowed" });
+    }
+    res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+
     // Handle preflight OPTIONS request
     if (req.method === "OPTIONS") {
-      res.setHeader("Access-Control-Allow-Origin", "*"); // Replace with your domain
-      res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
-      res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
       res.status(204).end();
       return;
     }
 
-    // Add CORS headers for all other requests
-    res.setHeader("Access-Control-Allow-Origin", "*"); // Replace with your domain
-    res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
-    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+    // Validate API key
+    const { apiKey } = req.query;
+    if (!apiKey || apiKey !== SECRET_API_KEY) {
+      console.log("Invalid API Key:", apiKey);
+      return res.status(403).json({ error: "Forbidden: Invalid API key" });
+    }
 
-    const { limit = 5, apiKey } = req.query;
+    const { limit = 5 } = req.query;
 
     // Validate limit
     const parsedLimit = Math.min(Number(limit), 100); // Cap limit to 100
@@ -40,7 +56,9 @@ export default async function handler(req, res) {
 
     // Get all chunk files dynamically
     const chunkFiles = await fs.readdir(CHUNKS_DIR);
-    const chunkFileNames = chunkFiles.filter(file => file.startsWith("quote_chunk") && file.endsWith(".json"));
+    const chunkFileNames = chunkFiles.filter(
+      (file) => file.startsWith("quote_chunk") && file.endsWith(".json")
+    );
     if (chunkFileNames.length === 0) {
       return res.status(500).json({ error: "No chunks available" });
     }

@@ -5,11 +5,11 @@ const fetchQuotesOwn = async (quoteCount = 5, random = true) => {
 
     // Define the URL for the API call, passing in the limit, random flag, and API key
     const response = await fetch(
-      `https://www.quotica.life/api/quote_api?limit=${quoteCount}&random=${random}&apiKey=${apiKey}`,
+      `${window.location.origin}/api/quote_api?limit=${quoteCount}&random=${random}&apiKey=${window.encodeURIComponent(apiKey)}`,
       {
         mode: 'cors',
         headers: {
-          'Access-Control-Allow-Origin': '*', // Allow your frontend to call the API
+          'Content-Type': 'application/json', 
         },
       }
     );
@@ -30,7 +30,7 @@ const fetchQuotesOwn = async (quoteCount = 5, random = true) => {
     const formattedQuotes = data.map((quote) => ({
       text: quote.quote,
       author: quote.author,
-      weblink: "https://www.quotica.life", // Provide the correct domain here
+      weblink: "https://quotica.life", // Provide the correct domain here
     }));
 
     return formattedQuotes; // Return the formatted quotes

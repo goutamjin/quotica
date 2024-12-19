@@ -9,9 +9,9 @@ const mainHandler = async (count = 5, preferences = {},searchTerm = '') => {
   try {
     // Define the percentages for sub-handlers
     const subHandlersPercentages = [
-      { handler: hindiQuotesHandler, percentage: 0}, 
-      { handler: fetchDummyJsonQuotes , percentage: 0},
-      //{ handler: fetchPaperQuotes , percentage: 0 },
+      { handler: hindiQuotesHandler, percentage: 20}, 
+      { handler: fetchDummyJsonQuotes , percentage: 20},
+      { handler: fetchPaperQuotes , percentage: 20 },
      { handler: fetchQuotesOwn , percentage: 50 }
     ];
 
@@ -22,7 +22,6 @@ const mainHandler = async (count = 5, preferences = {},searchTerm = '') => {
 
       // Calculate the number of quotes for this handler based on the percentage
       const quotesToFetch = Math.ceil((count * percentage) / 100);
-      console.log(quotesToFetch,handler.name);
       let quotes=[];
       // Fetch the quotes from the sub-handler
       if(quotesToFetch>0) quotes = await handler(quotesToFetch,searchTerm);
